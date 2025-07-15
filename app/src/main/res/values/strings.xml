@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Notification</string>
+    <string name="channel_name">Notification Demo</string>
+    <string name="channel_description">Kênh thông báo mặc định của ứng dụng</string>
+    <string name="text_create_notification">Tạo thông báo</string>
+    <string name="notification_title">Thông báo của tôi</string>
+    <string name="notification_content">Nội dung thông báo đc tạo vào lúc </string>
+    <string name="txt_permission_denied">Quyền đã bị từ chối</string>
+    <string name="ok">Ok</string>
+    <string name="notification_permission_require">Quyền thông báo chưa được cấp cho ứng dụng</string>
+</resources>
