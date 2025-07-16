@@ -98,6 +98,8 @@ class MainActivity : AppCompatActivity() {
             .setGroup(CHANNEL_ID)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
             .setGroupSummary(true)
+            .addAction(R.drawable.notification_svgrepo_com, "Download", pendingIntent)
+            .addAction(R.drawable.ic_launcher_background, "Detail", pendingIntent)
         with(NotificationManagerCompat.from(this)) {
             if (ActivityCompat.checkSelfPermission(
                     baseContext,
