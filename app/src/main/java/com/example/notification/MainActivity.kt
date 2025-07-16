@@ -5,6 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private var notificationId = 0
     private lateinit var binding: ActivityMainBinding
     private lateinit var builder: NotificationCompat.Builder
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun sendNotification() {
-        with (NotificationManagerCompat.from(this)) {
+        with(NotificationManagerCompat.from(this)) {
             notify(notificationId++, builder.build())
         }
     }
-
 
 
     companion object {
@@ -69,20 +71,27 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun createNotification() {
+        val bitmapNull: Bitmap? = null
+        val iconBitmap = BitmapFactory.decodeResource(resources, R.drawable.img)
         val notifiContent = getString(R.string.notification_content) + " " + Utils.getCurrentTime()
         val intent = Intent(this, NotificationDetailActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             putExtra(NotificationDetailActivity.EXTRA_NOTIFICATION_CONTENT, notifiContent)
-            putExtra(NotificationDetailActivity.EXTRA_NOTIFICATION_TITLE, getString(R.string.notification_title))
+            putExtra(
+                NotificationDetailActivity.EXTRA_NOTIFICATION_TITLE,
+                getString(R.string.notification_title)
+            )
         }
-        val pendingIntent = PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent =
+            PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_IMMUTABLE)
         builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_svgrepo_com)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(notifiContent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setLargeIcon(iconBitmap)
             .setStyle(
-                NotificationCompat.BigTextStyle().bigText(notifiContent)
+                NotificationCompat.BigPictureStyle().bigPicture(iconBitmap).bigLargeIcon(bitmapNull)
             )
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -95,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                     android.Manifest.permission.POST_NOTIFICATIONS
                 ) != android.content.pm.PackageManager.PERMISSION_GRANTED
             ) {
-                if(shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
+                if (shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
                     Snackbar.make(
                         binding.main,
                         getString(R.string.notification_permission_require),
@@ -113,7 +122,8 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description) + " " + Utils.getCurrentTime()
+            val descriptionText =
+                getString(R.string.channel_description) + " " + Utils.getCurrentTime()
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
